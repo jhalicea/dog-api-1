@@ -1,5 +1,5 @@
 function validateInputs(number, breed) {
-
+//validate number
   let newNumber = 0;
   if (number < 1 || number > 50) {
     newNumber = 3;
@@ -7,20 +7,11 @@ function validateInputs(number, breed) {
     newNumber = number;
   }
 
+  //need to validate strings...
+
   getDogImage(newNumber, breed);
 
 }
-
-// function validateInputString(breed) {
-// //   let newBreed = '';
-// //   if(typeof breed === 'string') {
-// //     newBreed = breed;
-// //   } else {
-// //     newBreed = 'heeey';
-// //   }
-//   console.log(breed);
-//   getDogImage(breed);
-// }
 
 function btnListener() {
   $('form').on('click', '.submit', (event) => {
@@ -48,15 +39,19 @@ function getDogImage(number, breed) {
 
   const promise = fetch(url);
   promise.then(response => response.json())
-    // .then(responseJson => console.log(responseJson))
-    .then(responseJson => output(responseJson))
+    .then(responseJson => output(responseJson, breed))
     .catch(error => alert(`Something went wrong. Try again later. ${error}`));
 }
 
-function output(responseJson) {
+function output(responseJson, breed) {
+
   let imgHTML = '';
-  for(let img of responseJson.message) {
-    imgHTML += `<img src="${img}" alt="Image of Dog">`;
+  if (responseJson.status === 'error') {
+    imgHTML = `<h2>Breed Not Found. ${breed.toUpperCase()} Does Not Exist</h2>`;
+  } else {
+    for(let img of responseJson.message) {
+      imgHTML += `<img src="${img}" alt="Image of Dog">`;
+    }
   }
 
   $('.dog-output').html(imgHTML);
